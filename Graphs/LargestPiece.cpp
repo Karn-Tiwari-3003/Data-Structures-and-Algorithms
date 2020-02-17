@@ -23,44 +23,51 @@ Sample Output :
 
  */
 
-void dfs(char cake[NMAX][NMAX],int n,int &k,int i,int j){
-    k++;
-    cake[i][j]='0';
-    
-    if(i+1<n && cake[i+1][j]=='1')
-        dfs(cake,n,k,i+1,j);
-    if(i-1>=0 && cake[i-1][j]=='1')
-        dfs(cake,n,k,i-1,j);
-    if(j+1<n && cake[i][j+1]=='1')
-        dfs(cake,n,k,i,j+1);
-    if(j-1>=0 && cake[i][j-1]=='1')
-        dfs(cake,n,k,i,j-1);
-    
+#include<bits/stdc++.h>
+#define NMAX 55
+char cake[NMAX][NMAX];
+using namespace std;
+
+int xdir[4] = {0,0,-1,1};
+int ydir[4] = {-1,1,0,0};
+
+bool eligible(int i, int j, int n){
+    if(i>=0 && j>=0 && i<n && j<n)
+        return true;
+    return false;
 }
 
-int solve(int n,char cake[NMAX][NMAX])
-{
-	// Write your code here .
-    int ans=0;
-    for(int i=0;i<n;i++){
-        for(int j=0;j<n;j++){
-            
-            if(cake[i][j]=='1'){
-                int k1=0;
-                dfs(cake,n,k1,i,j);
-                ans=max(ans,k1);
-            }
+int dfs(char cake[NMAX][NMAX], int n, int i, int j, bool visited[NMAX][NMAX]){
+    visited[i][j] = true;
+    int ans = 1;
+    for(int k = 0 ; k < 4 ; k++){
+        int dx = i + xdir[k];
+        int dy = j + ydir[k];
+        if(eligible(dx,dy,n) && cake[dx][dy] == '1' && visited[dx][dy] == false){
+            ans += dfs(cake, n, dx, dy, visited);
         }
     }
     return ans;
 }
 
+int solve(int n,char cake[NMAX][NMAX])
+{
+	bool visited[NMAX][NMAX];
+    memset(visited,false,sizeof(visited));
+    int max_piece = INT_MIN;
+    
+    for(int i = 0 ; i < n ; i++){
+        for(int j = 0 ; j < n ; j++){
+            int curr_piece = 0;
+            if(cake[i][j] == '1'){
+               curr_piece = dfs(cake, n, i, j, visited);
+            }
+            max_piece = max(max_piece, curr_piece);
+        }
+    }
+    return max_piece;
+}
 
-#include<iostream>
-#include<vector>
-using namespace std;
-#define NMAX 55
-char cake[NMAX][NMAX];
 int main()
 {
 	int n;
