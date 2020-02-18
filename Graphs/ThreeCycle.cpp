@@ -29,47 +29,38 @@ Sample Output:
 
 #include <bits/stdc++.h>
 using namespace std;
-
-
+#define MAXN 100
 
 int solve(int n,int m,vector<int>u,vector<int>v)
 {
-	// Write your code here .
-    unordered_map<int,unordered_set<int> >adj;
-    
-    for(int i=0;i<m;i++){
-        adj[u[i]].insert(v[i]);
-        adj[v[i]].insert(u[i]);
+    int edges[n][MAXN];
+    memset(edges,0,sizeof(edges));
+    for(int i = 0 ; i < m ; i++){
+        edges[u[i]-1][v[i]-1] = 1;
+        edges[v[i]-1][u[i]-1] = 1;
     }
     
+    bool visited[n];
+    memset(visited,false,sizeof(visited));
+    int count = 0;
     
-    int thcycle=0;
-    for(int i=1;i<=n;i++){
-        int node=i;
-        
-        for(int p=1;p<n;p++){
-            for(int q=p+1;q<=n;q++){
-                
-                if(adj[node].count(p)==0)
-                    break;
-                if(adj[node].count(q)==0)
-                    continue;
-                
-                if(adj[node].count(p) && adj[node].count(q)){
-                    if(adj[p].count(q))
-                        thcycle++;
-                }
+    for(int i = 0 ; i < n ; i++){
+        visited[i] = true;
+        vector<int> v;
+        for(int j = 0 ; j < n ; j++){
+            if(edges[i][j] == 1 && !visited[j]){
+                v.push_back(j);
+            }
+        }
+        for(int j = 0 ; j < v.size() ; j++){
+            for(int k = 0 ; k < n ; k++){
+                if(!visited[k] && edges[v[j]][k] == 1 && edges[i][k] == 1)
+                    count++;
             }
         }
     }
-    return thcycle/3;
-    
+    return count/2;
 }
-
-
-#include<iostream>
-#include<vector>
-using namespace std;
 
 int main()
 {
