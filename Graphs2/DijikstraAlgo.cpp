@@ -31,77 +31,73 @@ Sample Output 1 :
 
  */
 
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-int findMinDis(int distance[],bool visited[],int n)
-{
-    int minV=-1;
-    for(int i=0;i<n;i++)
-    {
-        if(!visited[i] && (minV==-1 || distance[minV]>distance[i]))
-            minV=i;
+int getMin(int* dis, bool* visited, int n){
+    int min = INT_MAX, min_index;
+    
+    for(int i = 0 ; i < n ; i++){
+        if(!visited[i] && dis[i] < min){
+            min_index = i;
+            min = dis[i];
+        }
     }
-    return minV;
+    return min_index;
 }
 
-void dijk(int **edges,int n){
-    
-    int distance[n];
-    bool visited[n];
-    for(int i=0;i<n;i++){
-        distance[i]=INT_MAX;
-        visited[i]=false;
-    }
-    
-    //Starting with node 0
-    distance[0]=0;
+void printDis(int* dis, int n){
+    for(int i = 0 ; i < n ; i++)
+        cout << i << " " << dis[i] << endl;
+}
 
+void dijkstra(int** edge, int n, int E){
+    int* dis = new int[n];
+    bool* visited = new bool[n];
+    for(int i = 0 ; i < n ; i++){
+        dis[i] = INT_MAX;
+        visited[i] = false;
+    }
+
+    dis[0] = 0;
     
-    for(int i=0;i<n-1;i++)
-    {
-        int minV=findMinDis(distance,visited,n);
-        visited[minV]=true;
+    for(int j = 0 ; j < n-1 ; j++){
+        int curr_index = getMin(dis, visited, n);
+        visited[curr_index] = true;
         
-        for(int j=0;j<n;j++)
-        {
-            if(edges[minV][j] && !visited[j])
-            {
-                if(distance[j]>distance[minV]+edges[minV][j])
-                    distance[j]=distance[minV]+edges[minV][j];
+        for(int i = 0 ; i < n ; i++){
+            if(edge[curr_index][i] && !visited[i] && edge[curr_index][i] + dis[curr_index] < dis[i]){
+                dis[i] = edge[curr_index][i] + dis[curr_index];
             }
         }
-        
     }
-    for(int i=0;i<n;i++)
-        cout<<i<<" "<<distance[i]<<endl;
+    
+    printDis(dis, n);
 }
 
 int main()
 {
-    int V, E;
-    cin >> V >> E;
-
-    int **edges=new int*[V];
-    for(int i=0;i<V;i++)
-    {
-        edges[i]=new int[V];
-        for(int j=0;j<V;j++)
-            edges[i][j]=0;
+    int n, E;
+    cin >> n >> E;
+    int** edges = new int*[n];
+    for(int i = 0 ; i < n ; i++){
+        edges[i] = new int[n];
+        for(int j = 0 ; j < n ; j++)
+            edges[i][j] = 0;
     }
     
-    for(int i=0;i<E;i++){
-        int ei,ej,w;
-        cin>>ei>>ej>>w;
-        edges[ei][ej]=w;
-        edges[ej][ei]=w;
+    for(int i = 0 ; i < E ; i++){
+        int s, d, w;
+        cin >> s >> d >> w;
+        edges[s][d] = w;
+        edges[d][s] = w;
     }
-    dijk(edges,V);
-    /*
-    for(int i=0;i<V;i++){
-        delete edges[i];
+    
+    dijkstra(edges, n, E);
+    
+    for(int i = 0 ; i < n ; i++){
+        delete[] edges[i];
     }
-    delete edges;
-*/
-  return 0;
+    delete[] edges;
+    return 0;
 }
