@@ -29,12 +29,8 @@ Sample Output :
 50:
  */
 
-
-#include <queue>
+#include <bits/stdc++.h>
 using namespace std;
-
-#include <iostream>
-#include <vector>
 
 template <typename T>
 class TreeNode {
@@ -57,10 +53,6 @@ public:
 
 
 void printLevelWise(TreeNode<int>* root) {
-    /* Don't write main().
-     * Don't read input, it is passed as function argument.
-     * Print output as specified in the question.
-     */
     queue <TreeNode<int>*> pn;
     pn.push(root);
     
@@ -81,9 +73,6 @@ void printLevelWise(TreeNode<int>* root) {
     }
     
 }
-
-#include <queue>
-
 
 TreeNode<int>* takeInputLevelWise() {
     int rootData;
