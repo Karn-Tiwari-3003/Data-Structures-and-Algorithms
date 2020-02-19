@@ -1,3 +1,3 @@
 # Overview
 
-Repository meant for understanding and practice the use of various data structures and algorithms used in programming.
+Repository for understanding the various data structures and algorithm with the help of problems
