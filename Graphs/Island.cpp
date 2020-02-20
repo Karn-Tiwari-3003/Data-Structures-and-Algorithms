@@ -26,51 +26,51 @@ Sample Output :
 
  */
 
-
-#include <bits/stdc++.h>
+#include<bits/stdc++.h>
 using namespace std;
 
-void dfs(vector <vector <int> > &adj,int node,bool* visited){
-    visited[node]=true;
-    
-    for(int i=0;i<adj[node].size();i++)
-    {
-        if(!visited[adj[node][i]])
-            dfs(adj,adj[node][i],visited);
+int print(int** edges , int n , int sv , bool* visited){
+    list<int> q;
+    int count = 0;
+    for(int i = 0 ; i < n ; i++){
+        if(visited[i]==false){
+            q.push_back(i);
+            visited[i] = true;
+            while(!q.empty()){
+                sv = q.front();
+                q.pop_front();
+                for(int i = 0 ; i < n ; i++){
+                    if(edges[sv][i] == 1 && !visited[i]){
+                        q.push_back(i);
+                        visited[i] = true;
+                    }
+                }
+            }
+            count++;
+        }
     }
+    return count;
 }
 
 int solve(int n,int m,vector<int>u,vector<int>v)
 {
 	// Write your code here .
-    vector <vector <int> > adj(n+1);
-    
-    for(int i=0;i<m;i++){
-        adj[u[i]].push_back(v[i]);
-        adj[v[i]].push_back(u[i]);
+    int** edges = new int*[n]; // dynamic 2D allocation
+    for(int i = 0 ; i < n ; i++){
+        edges[i] = new int[n];
+        for(int j = 0 ; j < n ; j++)
+            edges[i][j] = 0;
     }
-    
-    bool* visited=new bool[n+1];
-    for(int i=1;i<=n;i++)
-        visited[i]=false;
-    
-    int conI=0;
-    
-    for(int i=1;i<=n;i++)
-    {
-        if(!visited[i])
-        {
-            dfs(adj,i,visited);
-            conI++;
-        }
+    for(int i = 0 ; i < m ; i++){
+        edges[u[i]-1][v[i]-1] = 1;
+        edges[v[i]-1][u[i]-1] = 1;
     }
-    return conI;
+    bool visited[n];
+    for(int i = 0 ; i < n ;i++)
+        visited[i] = false;
+    
+    return print(edges, n, 0, visited);
 }
-
-
-#include<iostream>
-#include<vector>
-using namespace std;
 
 int main()
 {
