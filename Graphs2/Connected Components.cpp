@@ -10,7 +10,7 @@ void dfs(vector<int>* edges, int start, unordered_set<int>* component, bool* vis
     for(int i = 0 ; i < edges[start].size() ; i++){
         int next = edges[start][i];
         if(!visited[next]){
-            dfs(edges, start, component, visited);
+            dfs(edges, next, component, visited);
         }
     }
 }
