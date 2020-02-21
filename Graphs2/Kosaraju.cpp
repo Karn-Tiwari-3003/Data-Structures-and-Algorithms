@@ -1,3 +1,5 @@
+/* Finding strongly connected components in directed graph */
+
 #include<bits/stdc++.h>
 using namespace std;
 
