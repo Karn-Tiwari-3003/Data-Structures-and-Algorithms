@@ -80,35 +80,31 @@ void getSCC(vector<int>* edges, vector<int>* edgesT, int n){
             k++;
         }
     }
-    
-    int flag = 1;
-    vector<int> ans;
+
+    set<int> ans;
+    set<int> helper;
     vector<int> bottom;
     for(int i = 0 ; i < k ; i++){
         for(int j = 0 ; j < SCC[i].size(); j++){
-            ans.push_back(SCC[i][j]);
+            ans.insert(SCC[i][j]);
+            helper.insert(SCC[i][j]);
         }
-        for(int m = 0 ; m < ans.size() ; m++){
-            int node = ans[m];
+        set<int> :: iterator it;
+        for(it = ans.begin() ; it != ans.end() ; it++){
+            int node = *it;
             for(int j = 0 ; j < edges[node].size() ; j++){
-                int new_node = edges[node][j];
-                vector<int> :: iterator it;
-                it = find(ans.begin(), ans.end(), new_node);
-                if(it == ans.end()){
-                    flag = 0;
-                    break;
-                }
+                helper.insert(edges[node][j]);
             }
-            if(flag == 0)
-                break;
         }
-        if(flag == 1){
-            for(int j = 0 ; j < ans.size() ; j++)
-                bottom.push_back(ans[j]);
+        if(ans == helper){
+            for(it = ans.begin() ; it != ans.end() ; it++){
+                bottom.push_back(*it);
+            }
         }
-        flag = 1;
         ans.clear();
+        helper.clear();
     }
+    
     sort(bottom.begin(), bottom.end());
     for(int i = 0 ; i < bottom.size() ; i++)
         cout << bottom[i] + 1 << " ";
